@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Glink</title>
+    <link>https://glink-incubator.github.io/</link>
+    <description>Recent content on Glink</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	<atom:link href="https://glink-incubator.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Spatial Filter</title>
+      <link>https://glink-incubator.github.io/applications/spatial_filter/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://glink-incubator.github.io/applications/spatial_filter/</guid>
+      <description>SpatialDataStream API Spatial SQL API     Spatial Filter用于进行时间无关的无界空几间数据处理. 一般用于对无界空间数据进行基于空间关系的过滤操作, 比如对轨迹数据流进行过滤, 以保留落在某个指定行政区内的轨迹数据. 它包含三个要素:
+ 无界空间数据: 被过滤的主体. 查询几何: 用来对空间数据流进行过滤的几何图形. 拓扑关系: 指示流几何与查询几何在空间上处于何种拓扑关系时, 该记录将被保留.  Glink在SpatialDataStream API中对Spatial Filter提供了完善的支持, 包括支持所有符合OGC标准的几何要素对象以及拓扑关系, 以及支持多个查询几何的场景, 并对此进行了优化. Spatial SQL API中同样提供了对Spatial Filter的支持, 不过存在一定限制.
+SpatialDataStream API 以下是一个使用SpatialDataStream API进行Spatial Filter的案例. 该案例对一个无界空间点数据进行过滤, 所有包含在多边形 POLYGON ((10 10, 10 20, 20 20, 20 10, 10 10))内的点将被保留, 其他点将被过滤. 我们在Glink的源代码中提供了一个可运行的Spatial Filter案例, 具体可参见SpatialFilterExample.
+StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment(); Geometry queryGeometry = ... // e.</description>
+    </item>
+    
+    <item>
+      <title>Spatial Window KNN</title>
+      <link>https://glink-incubator.github.io/applications/spatial_window_knn/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://glink-incubator.github.io/applications/spatial_window_knn/</guid>
+      <description>Spatial Window KNN用于实现窗口化的KNN查询, 即根据输入的查询点, 实时输出每个时间窗口内距离(目前仅支持欧式距离)查询点最近的K个流几何. 它包含以下几个要素:
+ 无界空间数据: 被查询的主体, 将根据指定的窗口长度进行划分. 查询点: 用来进行查询的空间点. K值: 当前窗口中与查询点距离最近的K个流几何将被保留. 窗口: 定义窗口的划分方式, 每个窗口内的数据将分别进行KNN查询.  Glink目前仅在SpatialDataStream API中提供了Spatial Window KNN的支持, 以下是一个案例. 该案例将对无界空间点数据进行滑动窗口划分, 窗口长度为5s, 并对每个窗口内的数据执行KNN查询, 距离空间点POINT (100.5, 30.5)最近的3个流几何将被输出. 我们在Glink的源代码中提供了一个可直接运行的案例, 具体可参见SpatialWindowKNNExample.
+StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment(); Point queryPoint = SpatialDataStream.geometryFactory.createPoint(new Coordinate(100.5, 30.5)); SpatialDataStream&amp;lt;Point&amp;gt; pointDataStream = new SpatialDataStream&amp;lt;&amp;gt;( env, pointTextPath, new SimpleSTPointFlatMapper()); pointDataStream.assignTimestampsAndWatermarks(WatermarkStrategy .&amp;lt;Point&amp;gt;forMonotonousTimestamps() .withTimestampAssigner((point, time) -&amp;gt; { Tuple2&amp;lt;String, Long&amp;gt; userData = (Tuple2&amp;lt;String, Long&amp;gt;) point.getUserData(); return userData.f1; })); DataStream&amp;lt;Point&amp;gt; knnStream = SpatialWindowKNN.</description>
+    </item>
+    
+    <item>
+      <title>Spatial Join</title>
+      <link>https://glink-incubator.github.io/applications/spatial_join/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://glink-incubator.github.io/applications/spatial_join/</guid>
+      <description>Spatial Dimension Join  SpatialDataStream API Spatial SQL API   Spatial Window Join Spatial Interval Join     Glink提供了三种类型的Spatial Join, 分别是用于流-维Join的Spatial Dimension Join, 以及用于双流Join的Spatial Window Join和Spatial Interval Join. 下面将分别介绍.
+Spatial Dimension Join Spatial Dimension Join用于流-维Join, 可以实现无界空间数据中流几何与空间维度表中维度几何的空间连接. 比如现在有一个轨迹数据流, 以及相应的区县级行政区划(每个区/县的地理范围都对应一个地理多边形), Spatial Dimension Join可将二者进行空间连接, 每个轨迹点与空间上包含其的行政区连接.
+Glink在SpatialDataStream API以及Spatial SQL API中均提供了对Spatial Dimension Join的支持, 不过目前实现方式有所区别. 在SpatialDataStream中, Glink将空间维度表以BraodcastDataStream的形式表示, 在内存中为空间维度表建立了R-tree索引, 吞吐量较高; 在Spatial SQL中, 借助lookup join语法实现, 空间维度表必须存储在外部引擎中, 目前仅支持GeoMesa HBase Datastore, 由于每个流几何的连接都需要访问外部存储, 其吞吐量相对较低, 仍存在进一步优化的空间.</description>
+    </item>
+    
+    <item>
+      <title>Spatial Window DBSCAN</title>
+      <link>https://glink-incubator.github.io/applications/spatial_window_dbscan/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://glink-incubator.github.io/applications/spatial_window_dbscan/</guid>
+      <description>  Spatial Window DBSCAN用于实现窗口化的DBSCAN聚类, 即对每个窗口内的数据执行DBSCAN聚类并即时输出聚类结果. 它包含以下几个要素:
+ 无界点数据: 被查询的主体, 将根据指定的窗口长度进行划分, 对于DBSCAN聚类只支持点对象. DBSCAN参数: 包括距离阈值ε和最小点数minPts. 窗口: 定义窗口的划分方式, 每个窗口内的数据将分别进行DBSCAN聚类.  Glink目前仅在SpatialDataStream API中提供了Spatial Window DBSCAN的支持, 以下是一个案例. 该案例将对无界空间点数据进行滑动窗口划分, 窗口长度为5min, 并对每个窗口内的数据执行DBSCAN聚类, 距离阈值为0.15KM, 最小点数为3. 我们在Glink的源代码中提供了一个可直接运行的案例, 具体可参见WindowDBSCANExample.
+StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment(); SpatialDataStream&amp;lt;Point2&amp;gt; pointDataStream = new SpatialDataStream&amp;lt;&amp;gt;( env, path, new SimpleSTPoint2FlatMapper()) .assignTimestampsAndWatermarks(WatermarkStrategy .&amp;lt;Point2&amp;gt;forMonotonousTimestamps() .withTimestampAssigner((p, time) -&amp;gt; p.getTimestamp())); DataStream&amp;lt;Tuple2&amp;lt;Integer, List&amp;lt;Point2&amp;gt;&amp;gt;&amp;gt; dbscanStream = WindowDBSCAN.dbscan( pointDataStream, 0.15, 3, TumblingEventTimeWindows.of(Time.minutes(5))); </description>
+    </item>
+    
+    <item>
+      <title>Overview</title>
+      <link>https://glink-incubator.github.io/connectors/overview/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://glink-incubator.github.io/connectors/overview/</guid>
+      <description>Glink需要与外部存储引擎交互, 以从中摄取数据进行计算或输出计算结果. 在Glink中, 外部存储引擎通常有以下几种用途:
+ 在ETL场景中, 作为数据输入(source), 或计算结果的输出(sink). source端一般是支持流式消费的消息队列或文件, sink端既可以是消息队列和文件(用于下游流计算), 也可以是数据库(用于查询或分析). 借助外部存储引擎的时空索引能力, 进行空间lookup join (spatial lookup join).  然而, 由于Flink目前并不支持空间数据类型, 且无法支持可注册的自定义类型, 因此Flink现有的Connector对空间数据类型的支持是有限制的.
+ 对于像Kafka这种无schema的存储引擎, 可以用Glink提供的Spatial SQL将空间数据转换为WKT/WKB进行存储. 对于关系型数据库, 尽管MySQL, PostreSQL都支持空间数据存储, 但是直接用Flink JDBC Connector是无法写入空间数据类型的, 因为这些数据库需要严格的类型定义, 而目前在Flink中无法在CREATE TABLE DDL中定义空间数据类型. 当然, 我们可以以WKT/WKB的形式将空间数据存储到关系型数据库中, 遗憾的是这样我们只能简单的存储数据, 无法使用存储引擎的空间索引能力.  不过好在Flink一般在大数据量的场景下使用, 在大数据场景下目前最为流行的时空数据存储引擎是GeoMesa, 底层支持各类分布式存储引擎. 为此Glink通过扩展Flink的Connector框架, 提供了GeoMesa Connector, 它支持完备的空间数据类型和空间关系.</description>
+    </item>
+    
+    <item>
+      <title>GeoMesa SQL Connector</title>
+      <link>https://glink-incubator.github.io/connectors/geomesa/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://glink-incubator.github.io/connectors/geomesa/</guid>
+      <description>Dependencies DDL  DDL中定义空间数据类型 DDL中指定空间连接谓词   How to use GeoMesa table Connector Options  GeoMesa HBase Data Store   Data Type Mapping  Basic Data Types Spatial Data Types       Glink对Flink的SQL Connector进行了扩展, 实现了GeoMesa SQL Connector. 这里介绍了如何设置和使用GeoMesa SQL Connector. 我们在GeoMesa 3.1+版本上进行了测试.
+Dependencies 为了使用GeoMesa SQL Connector, 需要添加如下依赖.
+   Glink dependency     glink-connector-geomesa-x.x.x.jar   glink-sql-x.x.x.jar    最简单的方法是将$GLINK_HOME/lib目录中的上述两个Jar包复制到$FLINK_HOME/lib目录下.</description>
+    </item>
+    
+    <item>
+      <title>Glink SQL Functions</title>
+      <link>https://glink-incubator.github.io/glink_sql/glink_sql_functions/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://glink-incubator.github.io/glink_sql/glink_sql_functions/</guid>
+      <description>Glink在Flink SQL框架上扩展了一系列Spatial SQL函数, 具体函数列表和定义可参考GeoMesa SparkSQL Functions.</description>
+    </item>
+    
+    <item>
+      <title>Overview</title>
+      <link>https://glink-incubator.github.io/introduction/overview/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://glink-incubator.github.io/introduction/overview/</guid>
+      <description>Glink Use Case Glink Architecture     Glink (Geographic Flink)是Flink在空间数据处理领域的扩展, 为Flink增加了兼容OGC标准的空间数据类型. Glink在DataStream API的基础之上构建了一层SpatialDataStream API, 增加了支持空间数据操作, 处理和分析的算子; 并在SQL API上扩展了符合SFA SQL规范的空间处理函数.
+Glink Use Case Glink主要用于带有空间属性的无界数据(无界空间数据)的流处理, 目前支持的功能如下下:
+ Spatial Filter: 用于对无界空间数据进行空间过滤, 支持任意数量过类型的过滤几何, 同时支持任意类型的空间关系. Glink对常见的&amp;quot;选取一个或多个多边形内的点数据&amp;quot;这一场景进行了优化. Spatial KNN: 用于在无界空间数据的窗口快照上执行KNN. Spatial Join  Spatial Dimension Join: 用于无界空间数据与空间维度表的连接, 空间维度表支持以BroadcastStream的形式输入, 或存储在外部空间数据引擎(如GeoMesa)中. Spatial Window Join: 用于对两个无界空间数据集进行Window Join. Spatial Interval Join: 用于对两个无界空间数据集进行Interval Join.   Spatial Window DBSCAN: 用于在无界空间数据的窗口快照上执行DBSCAN聚类.  Glink Architecture Glink在Flink的基础之上增加了Spatial Data Stream Layer, Spatial Stream Processing Layer和Spatial API Layer.</description>
+    </item>
+    
+    <item>
+      <title>Getting Started</title>
+      <link>https://glink-incubator.github.io/introduction/getting-started/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://glink-incubator.github.io/introduction/getting-started/</guid>
+      <description>Run Example of Glink Use Glink in Program     Run Example of Glink  在Release页面下载Glinker二进制发布包. 解压发布包.  tar -zxvf glink-x.x.x-bin.tar.gz 运行Glink提供的Spatial Filter示例.  nc -lk 9999 cd glink-x.x.x/examples flink run -c cn.edu.whu.glink.examples.datastream.SpatialFilterExample glink-examples-1.0.0.jar 该示例有两个查询几何, Polygon ((0 5,5 10,10 5,5 0,0 5))和Polygon ((5 5,10 10,15 5,10 0,5 5)), 用于过滤落在这两个多边形外部的点. 它监听9999端口, 可在nc -lk 9999窗口输入如下数据进行测试.
+1,114.35,34.50 2,2,2 Use Glink in Program  下载Glink源代码.  git clone git@github.</description>
+    </item>
+    
+    <item>
+      <title>Glink SQL on Zepplin</title>
+      <link>https://glink-incubator.github.io/glink_sql/glink_sql_on_zepplin/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://glink-incubator.github.io/glink_sql/glink_sql_on_zepplin/</guid>
+      <description>Config Glink SQL on Zepplin     Glink SQL可以借助Flink的SQL API直接在Java代码中使用, 不过借助SQL客户端可以免去创建工程和配置依赖的繁琐. 目前开源可用的Flink SQL客户端主要有Flink自带的SQL Client的和Apache Zepplin. 我们将在Zepplin上使用Glink SQL.
+关于Zepplin的安装这里不再赘述, 如有问题可参考Flink on Zeppelin, 其中有详细的教程.
+Config Glink SQL on Zepplin 要在Zepplin中使用Glink扩展的SQL函数需要在Flink Interpreter指定UDF Jar路径. 在flink.udf.jars配置项中增加$GLINK_HOME/lib/glink-sql-x.x.x.jar即可.</description>
+    </item>
+    
+    <item>
+      <title>Development</title>
+      <link>https://glink-incubator.github.io/dev_ctr/development/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://glink-incubator.github.io/dev_ctr/development/</guid>
+      <description>Preparation Building Glink from Source Importing Flink into IntelliJ IDEA     Preparation 在开始开发之前, 先从代码仓库下载Glink源码.
+git clone git@github.com:glink-incubator/glink.git Building Glink from Source 为从源码构建Glink, 需要安装Maven 3和Java 8. 安装完成后使用如下命令即可进行编译.
+mvn clean paclage -DskipTests Importing Flink into IntelliJ IDEA 我们使用IntelliJ IDEA开发Glink, 可通过如下步骤在IDEA中打开Glink项目:
+ 打开IDEA, 选择&amp;quot;Open&amp;rdquo;; 选中Glink源代码所在文件夹, 点击&amp;quot;OK&amp;quot;即可打开; 等待IDEA自动导入项目.  Glink在编译时强制进行Checkstyle检查, 不通过则终止编译. 在IDEA中可使用&amp;quot;CheckStyle-IDEA&amp;quot;插件进行检查, 若未安装该插件, 通过如下步骤安装并配置Glink Checkstyle:
+ 选择&amp;quot;File-&amp;gt;Settings-&amp;gt;Plugins&amp;rdquo;, 在搜索框输入&amp;quot;CheckStyle-IDEA&amp;quot;并搜索, 点击安装该插件; 重启IDEA; 选择&amp;quot;File-&amp;gt;Settings-&amp;gt;Tools-&amp;gt;Checkstyle&amp;rdquo;; 在&amp;quot;Scan Scope&amp;quot;中选择&amp;quot;Only java sources(including tests)&amp;quot;; 在&amp;quot;Configuration File&amp;quot;中点击&amp;quot;+&amp;rdquo;; 在弹出框中, &amp;ldquo;Description&amp;quot;填入&amp;quot;glink&amp;rdquo;, 点击&amp;quot;Browse&amp;rdquo;, 选择&amp;quot;glink/config/checkstyle.</description>
+    </item>
+    
+    <item>
+      <title>Contribution</title>
+      <link>https://glink-incubator.github.io/dev_ctr/contribution/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://glink-incubator.github.io/dev_ctr/contribution/</guid>
+      <description>    Contribution to Glink Documentation Contribution to Glink Code     欢迎对Glink文档和代码进行任何形式的贡献.
+Contribution to Glink Documentation Glink文档托管在https://github.com/glink-incubator/glink-docs仓库中, 采用Hugo进行渲染.
+对于简单的问题如拼写错误等直接提交commit即可, 对于新增页面或描述上的较大改动请创建一个Issue进行讨论, 注意Issue尽量使用英文. commit信息遵循如下规则:
+[hotfix] commit message [issue-number] commit message 在文档中注意如下规则:
+ 标点符号一律使用英文标点符号; 中英文之间不加空格.  Contribution to Glink Code Glink源代码托管在https://github.com/glink-incubator/glink仓库中.
+对于简单的错误更正直接提交commit即可, 对于新增功能或较大改动请创建一个Issue进行讨论, 注意Issue尽量使用英文. commit信息遵循如下规则:
+[hotfix] commit message [issue-number] commit message </description>
+    </item>
+    
+    <item>
+      <title>Glink SQL最佳实践 - GeoMesa结合应用</title>
+      <link>https://glink-incubator.github.io/posts/initial-release/</link>
+      <pubDate>Wed, 08 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://glink-incubator.github.io/posts/initial-release/</guid>
+      <description>&lt;p&gt;原文链接: &lt;a class=&#34;gdoc-markdown__link&#34; href=&#34;https://liebing.org.cn/2021/02/20/glink_sql_best_practice-geomesa-application/&#34;&gt;Glink SQL最佳实践 - GeoMesa结合应用&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;a class=&#34;gdoc-markdown__link&#34; href=&#34;https://www.geomesa.org/documentation/stable/index.html&#34;&gt;GeoMesa&lt;/a&gt;已经成为时空数据存储领域重要的索引中间件, &lt;a class=&#34;gdoc-markdown__link&#34; href=&#34;https://just.urban-computing.cn/&#34;&gt;京东城市时空数据引擎JUST&lt;/a&gt;和阿里云的&lt;a class=&#34;gdoc-markdown__link&#34; href=&#34;https://help.aliyun.com/knowledge_detail/87287.html&#34;&gt;HBase Ganos&lt;/a&gt;均是在GeoMesa的基础上扩展而来. GeoMesa采用键值存储, 支持多种类型的存储后端, 如HBase, Kafka, Redis等. 相对于PostgreSQL+PostGIS这种基于R-tree索引的关系型存储, GeoMesa的存储方案更容易与HBase等现有的分布式数据库相结合, 从而直接利用底层数据库的分布式特性, 更适合时空大数据的存储以及实时场景的应用.&lt;/p&gt;
+&lt;p&gt;为在时空流计算中利用GeoMesa的高效写入和时空查询能力, Glink扩展Flink SQL Connector框架形成了Flink GeoMesa SQL Connector(简称GeoMesa SQL Connector), 支持使用Flink SQL读写GeoMesa. 本文通过实际的应用案例, 讲述如何在Flink SQL中使用GeoMesa. 在流计算中Flink+GeoMesa主要有以下两种使用场景:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;时空数据管道 &amp;amp; ETL&lt;/strong&gt;: 以GeoMesa作为时空数据存储引擎, 通过Flink SQL构建实时的时空数据ETL管道, 将时空数据从文件, Kafka等数据源导入到GeoMesa;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Spatial temporal join&lt;/strong&gt;: 将维表存储在GeoMesa中, 通过Flink SQL进行流表与维表的&lt;strong&gt;空间join&lt;/strong&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;本文需要glink-0.1.2及以上版本, 可在zepplin中运行, 关于Glink及zepplin的安装配置参考&lt;a class=&#34;gdoc-markdown__link&#34; href=&#34;https://liebingyu.gitbook.io/glink/install&#34;&gt;Glink文档&lt;/a&gt;. 为方便复现笔者提供了可直接运行的&lt;a class=&#34;gdoc-markdown__link&#34; href=&#34;https://github.com/traj-explorer/glink/blob/master/glink-examples/src/main/zepplin/glink-geomesa.zpln&#34;&gt;glink-geomesa.zpln&lt;/a&gt;, 下载后可直接在zepplin打开运行.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://glink-incubator.github.io/_includes/include-page/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://glink-incubator.github.io/_includes/include-page/</guid>
+      <description>Example page include
+Example Shortcode
+Shortcode used in an include page.     Head 1 Head 2 Head 3     1 2 3    </description>
+    </item>
+    
+    <item>
+      <title>Concepts</title>
+      <link>https://glink-incubator.github.io/introduction/concepts/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://glink-incubator.github.io/introduction/concepts/</guid>
+      <description>Unbounded Spatial Data (无界空间数据) Stream Geometry (流几何) Query Stream (查询几何) Spatial Dimension Table (空间维度表) Dimension Geometry (维度几何)     在Glink的源代码或本文档中, 为了实现更好的抽象, 我们引入了一些新的概念和名词, 这里进行集中介绍, 以方便读者更好地理解代码或文档中的内容.
+Unbounded Spatial Data (无界空间数据) 无界数据(Unbounded Data)的概念已经成熟, 无界空间数据是指带有空间属性的无界数据, 即数据中的每条记录都代表空间上的某个几何对象, 并可附带其他相关属性. 需要强调的一点是, 无界空间数据中的每条记录必须至少包含一个空间属性, 其他属性则是可选的. Glink中的SpatialDataStream便是一种无界空间数据的具体实现.
+Stream Geometry (流几何) 无界空间数据中的单条记录称为流几何, 在Glink中用JTS的Geometry表示, 记录中的其他属性以Flink Tuple的形式存储在Geometry的userData成员变量中.
+Query Stream (查询几何) 在无界空间数据的处理算子中, 输入的几何参数称为查询几何. 查询几何通常作为Spatial Filter或Spatial Join的条件.
+Spatial Dimension Table (空间维度表) 空间维度表表示带有空间属性的一系列数据集合, 其中的数据记录可以是不变的或缓慢变化的. 这里的空间维度表是一种抽象的概念, 因此其物理形态可以是多样的, 比如在Flink中以BroadcastDataStream的形态存在, 或者存储在外部的空间存储引擎(如GeoMesa)中.
+Dimension Geometry (维度几何) 空间维度表中的单条记录称为维度几何.</description>
+    </item>
+    
+  </channel>
+</rss>

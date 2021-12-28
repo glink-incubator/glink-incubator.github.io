@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>最佳实践 on Glink</title>
+    <link>https://glink-incubator.github.io/tags/%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/</link>
+    <description>Recent content in 最佳实践 on Glink</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Wed, 08 Jan 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://glink-incubator.github.io/tags/%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Glink SQL最佳实践 - GeoMesa结合应用</title>
+      <link>https://glink-incubator.github.io/posts/initial-release/</link>
+      <pubDate>Wed, 08 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://glink-incubator.github.io/posts/initial-release/</guid>
+      <description>&lt;p&gt;原文链接: &lt;a class=&#34;gdoc-markdown__link&#34; href=&#34;https://liebing.org.cn/2021/02/20/glink_sql_best_practice-geomesa-application/&#34;&gt;Glink SQL最佳实践 - GeoMesa结合应用&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;a class=&#34;gdoc-markdown__link&#34; href=&#34;https://www.geomesa.org/documentation/stable/index.html&#34;&gt;GeoMesa&lt;/a&gt;已经成为时空数据存储领域重要的索引中间件, &lt;a class=&#34;gdoc-markdown__link&#34; href=&#34;https://just.urban-computing.cn/&#34;&gt;京东城市时空数据引擎JUST&lt;/a&gt;和阿里云的&lt;a class=&#34;gdoc-markdown__link&#34; href=&#34;https://help.aliyun.com/knowledge_detail/87287.html&#34;&gt;HBase Ganos&lt;/a&gt;均是在GeoMesa的基础上扩展而来. GeoMesa采用键值存储, 支持多种类型的存储后端, 如HBase, Kafka, Redis等. 相对于PostgreSQL+PostGIS这种基于R-tree索引的关系型存储, GeoMesa的存储方案更容易与HBase等现有的分布式数据库相结合, 从而直接利用底层数据库的分布式特性, 更适合时空大数据的存储以及实时场景的应用.&lt;/p&gt;
+&lt;p&gt;为在时空流计算中利用GeoMesa的高效写入和时空查询能力, Glink扩展Flink SQL Connector框架形成了Flink GeoMesa SQL Connector(简称GeoMesa SQL Connector), 支持使用Flink SQL读写GeoMesa. 本文通过实际的应用案例, 讲述如何在Flink SQL中使用GeoMesa. 在流计算中Flink+GeoMesa主要有以下两种使用场景:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;时空数据管道 &amp;amp; ETL&lt;/strong&gt;: 以GeoMesa作为时空数据存储引擎, 通过Flink SQL构建实时的时空数据ETL管道, 将时空数据从文件, Kafka等数据源导入到GeoMesa;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Spatial temporal join&lt;/strong&gt;: 将维表存储在GeoMesa中, 通过Flink SQL进行流表与维表的&lt;strong&gt;空间join&lt;/strong&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;本文需要glink-0.1.2及以上版本, 可在zepplin中运行, 关于Glink及zepplin的安装配置参考&lt;a class=&#34;gdoc-markdown__link&#34; href=&#34;https://liebingyu.gitbook.io/glink/install&#34;&gt;Glink文档&lt;/a&gt;. 为方便复现笔者提供了可直接运行的&lt;a class=&#34;gdoc-markdown__link&#34; href=&#34;https://github.com/traj-explorer/glink/blob/master/glink-examples/src/main/zepplin/glink-geomesa.zpln&#34;&gt;glink-geomesa.zpln&lt;/a&gt;, 下载后可直接在zepplin打开运行.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

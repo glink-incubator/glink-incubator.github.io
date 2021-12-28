@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /tags/*
+
+Sitemap: https://glink-incubator.github.io/sitemap.xml

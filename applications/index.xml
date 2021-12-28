@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Applications on Glink</title>
+    <link>https://glink-incubator.github.io/applications/</link>
+    <description>Recent content in Applications on Glink</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	<atom:link href="https://glink-incubator.github.io/applications/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Spatial Filter</title>
+      <link>https://glink-incubator.github.io/applications/spatial_filter/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://glink-incubator.github.io/applications/spatial_filter/</guid>
+      <description>SpatialDataStream API Spatial SQL API     Spatial Filter用于进行时间无关的无界空几间数据处理. 一般用于对无界空间数据进行基于空间关系的过滤操作, 比如对轨迹数据流进行过滤, 以保留落在某个指定行政区内的轨迹数据. 它包含三个要素:
+ 无界空间数据: 被过滤的主体. 查询几何: 用来对空间数据流进行过滤的几何图形. 拓扑关系: 指示流几何与查询几何在空间上处于何种拓扑关系时, 该记录将被保留.  Glink在SpatialDataStream API中对Spatial Filter提供了完善的支持, 包括支持所有符合OGC标准的几何要素对象以及拓扑关系, 以及支持多个查询几何的场景, 并对此进行了优化. Spatial SQL API中同样提供了对Spatial Filter的支持, 不过存在一定限制.
+SpatialDataStream API 以下是一个使用SpatialDataStream API进行Spatial Filter的案例. 该案例对一个无界空间点数据进行过滤, 所有包含在多边形 POLYGON ((10 10, 10 20, 20 20, 20 10, 10 10))内的点将被保留, 其他点将被过滤. 我们在Glink的源代码中提供了一个可运行的Spatial Filter案例, 具体可参见SpatialFilterExample.
+StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment(); Geometry queryGeometry = ... // e.</description>
+    </item>
+    
+    <item>
+      <title>Spatial Window KNN</title>
+      <link>https://glink-incubator.github.io/applications/spatial_window_knn/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://glink-incubator.github.io/applications/spatial_window_knn/</guid>
+      <description>Spatial Window KNN用于实现窗口化的KNN查询, 即根据输入的查询点, 实时输出每个时间窗口内距离(目前仅支持欧式距离)查询点最近的K个流几何. 它包含以下几个要素:
+ 无界空间数据: 被查询的主体, 将根据指定的窗口长度进行划分. 查询点: 用来进行查询的空间点. K值: 当前窗口中与查询点距离最近的K个流几何将被保留. 窗口: 定义窗口的划分方式, 每个窗口内的数据将分别进行KNN查询.  Glink目前仅在SpatialDataStream API中提供了Spatial Window KNN的支持, 以下是一个案例. 该案例将对无界空间点数据进行滑动窗口划分, 窗口长度为5s, 并对每个窗口内的数据执行KNN查询, 距离空间点POINT (100.5, 30.5)最近的3个流几何将被输出. 我们在Glink的源代码中提供了一个可直接运行的案例, 具体可参见SpatialWindowKNNExample.
+StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment(); Point queryPoint = SpatialDataStream.geometryFactory.createPoint(new Coordinate(100.5, 30.5)); SpatialDataStream&amp;lt;Point&amp;gt; pointDataStream = new SpatialDataStream&amp;lt;&amp;gt;( env, pointTextPath, new SimpleSTPointFlatMapper()); pointDataStream.assignTimestampsAndWatermarks(WatermarkStrategy .&amp;lt;Point&amp;gt;forMonotonousTimestamps() .withTimestampAssigner((point, time) -&amp;gt; { Tuple2&amp;lt;String, Long&amp;gt; userData = (Tuple2&amp;lt;String, Long&amp;gt;) point.getUserData(); return userData.f1; })); DataStream&amp;lt;Point&amp;gt; knnStream = SpatialWindowKNN.</description>
+    </item>
+    
+    <item>
+      <title>Spatial Join</title>
+      <link>https://glink-incubator.github.io/applications/spatial_join/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://glink-incubator.github.io/applications/spatial_join/</guid>
+      <description>Spatial Dimension Join  SpatialDataStream API Spatial SQL API   Spatial Window Join Spatial Interval Join     Glink提供了三种类型的Spatial Join, 分别是用于流-维Join的Spatial Dimension Join, 以及用于双流Join的Spatial Window Join和Spatial Interval Join. 下面将分别介绍.
+Spatial Dimension Join Spatial Dimension Join用于流-维Join, 可以实现无界空间数据中流几何与空间维度表中维度几何的空间连接. 比如现在有一个轨迹数据流, 以及相应的区县级行政区划(每个区/县的地理范围都对应一个地理多边形), Spatial Dimension Join可将二者进行空间连接, 每个轨迹点与空间上包含其的行政区连接.
+Glink在SpatialDataStream API以及Spatial SQL API中均提供了对Spatial Dimension Join的支持, 不过目前实现方式有所区别. 在SpatialDataStream中, Glink将空间维度表以BraodcastDataStream的形式表示, 在内存中为空间维度表建立了R-tree索引, 吞吐量较高; 在Spatial SQL中, 借助lookup join语法实现, 空间维度表必须存储在外部引擎中, 目前仅支持GeoMesa HBase Datastore, 由于每个流几何的连接都需要访问外部存储, 其吞吐量相对较低, 仍存在进一步优化的空间.</description>
+    </item>
+    
+    <item>
+      <title>Spatial Window DBSCAN</title>
+      <link>https://glink-incubator.github.io/applications/spatial_window_dbscan/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://glink-incubator.github.io/applications/spatial_window_dbscan/</guid>
+      <description>  Spatial Window DBSCAN用于实现窗口化的DBSCAN聚类, 即对每个窗口内的数据执行DBSCAN聚类并即时输出聚类结果. 它包含以下几个要素:
+ 无界点数据: 被查询的主体, 将根据指定的窗口长度进行划分, 对于DBSCAN聚类只支持点对象. DBSCAN参数: 包括距离阈值ε和最小点数minPts. 窗口: 定义窗口的划分方式, 每个窗口内的数据将分别进行DBSCAN聚类.  Glink目前仅在SpatialDataStream API中提供了Spatial Window DBSCAN的支持, 以下是一个案例. 该案例将对无界空间点数据进行滑动窗口划分, 窗口长度为5min, 并对每个窗口内的数据执行DBSCAN聚类, 距离阈值为0.15KM, 最小点数为3. 我们在Glink的源代码中提供了一个可直接运行的案例, 具体可参见WindowDBSCANExample.
+StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment(); SpatialDataStream&amp;lt;Point2&amp;gt; pointDataStream = new SpatialDataStream&amp;lt;&amp;gt;( env, path, new SimpleSTPoint2FlatMapper()) .assignTimestampsAndWatermarks(WatermarkStrategy .&amp;lt;Point2&amp;gt;forMonotonousTimestamps() .withTimestampAssigner((p, time) -&amp;gt; p.getTimestamp())); DataStream&amp;lt;Tuple2&amp;lt;Integer, List&amp;lt;Point2&amp;gt;&amp;gt;&amp;gt; dbscanStream = WindowDBSCAN.dbscan( pointDataStream, 0.15, 3, TumblingEventTimeWindows.of(Time.minutes(5))); </description>
+    </item>
+    
+  </channel>
+</rss>

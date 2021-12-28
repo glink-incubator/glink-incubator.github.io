@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Development &amp; Contribution on Glink</title>
+    <link>https://glink-incubator.github.io/dev_ctr/</link>
+    <description>Recent content in Development &amp; Contribution on Glink</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	<atom:link href="https://glink-incubator.github.io/dev_ctr/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Development</title>
+      <link>https://glink-incubator.github.io/dev_ctr/development/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://glink-incubator.github.io/dev_ctr/development/</guid>
+      <description>Preparation Building Glink from Source Importing Flink into IntelliJ IDEA     Preparation 在开始开发之前, 先从代码仓库下载Glink源码.
+git clone git@github.com:glink-incubator/glink.git Building Glink from Source 为从源码构建Glink, 需要安装Maven 3和Java 8. 安装完成后使用如下命令即可进行编译.
+mvn clean paclage -DskipTests Importing Flink into IntelliJ IDEA 我们使用IntelliJ IDEA开发Glink, 可通过如下步骤在IDEA中打开Glink项目:
+ 打开IDEA, 选择&amp;quot;Open&amp;rdquo;; 选中Glink源代码所在文件夹, 点击&amp;quot;OK&amp;quot;即可打开; 等待IDEA自动导入项目.  Glink在编译时强制进行Checkstyle检查, 不通过则终止编译. 在IDEA中可使用&amp;quot;CheckStyle-IDEA&amp;quot;插件进行检查, 若未安装该插件, 通过如下步骤安装并配置Glink Checkstyle:
+ 选择&amp;quot;File-&amp;gt;Settings-&amp;gt;Plugins&amp;rdquo;, 在搜索框输入&amp;quot;CheckStyle-IDEA&amp;quot;并搜索, 点击安装该插件; 重启IDEA; 选择&amp;quot;File-&amp;gt;Settings-&amp;gt;Tools-&amp;gt;Checkstyle&amp;rdquo;; 在&amp;quot;Scan Scope&amp;quot;中选择&amp;quot;Only java sources(including tests)&amp;quot;; 在&amp;quot;Configuration File&amp;quot;中点击&amp;quot;+&amp;rdquo;; 在弹出框中, &amp;ldquo;Description&amp;quot;填入&amp;quot;glink&amp;rdquo;, 点击&amp;quot;Browse&amp;rdquo;, 选择&amp;quot;glink/config/checkstyle.</description>
+    </item>
+    
+    <item>
+      <title>Contribution</title>
+      <link>https://glink-incubator.github.io/dev_ctr/contribution/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://glink-incubator.github.io/dev_ctr/contribution/</guid>
+      <description>    Contribution to Glink Documentation Contribution to Glink Code     欢迎对Glink文档和代码进行任何形式的贡献.
+Contribution to Glink Documentation Glink文档托管在https://github.com/glink-incubator/glink-docs仓库中, 采用Hugo进行渲染.
+对于简单的问题如拼写错误等直接提交commit即可, 对于新增页面或描述上的较大改动请创建一个Issue进行讨论, 注意Issue尽量使用英文. commit信息遵循如下规则:
+[hotfix] commit message [issue-number] commit message 在文档中注意如下规则:
+ 标点符号一律使用英文标点符号; 中英文之间不加空格.  Contribution to Glink Code Glink源代码托管在https://github.com/glink-incubator/glink仓库中.
+对于简单的错误更正直接提交commit即可, 对于新增功能或较大改动请创建一个Issue进行讨论, 注意Issue尽量使用英文. commit信息遵循如下规则:
+[hotfix] commit message [issue-number] commit message </description>
+    </item>
+    
+  </channel>
+</rss>

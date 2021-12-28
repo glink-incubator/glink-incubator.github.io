@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Features on Glink</title>
+    <link>http://localhost/features/</link>
+    <description>Recent content in Features on Glink</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	<atom:link href="http://localhost/features/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Code Blocks</title>
+      <link>http://localhost/features/code-blocks/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost/features/code-blocks/</guid>
+      <description>There are several ways to add code blocks. Most of them work out of the box, only the Hugo short code &amp;lt;highlight&amp;gt; needs to be configured to work properly. The theme also provides some additional features like a copy button and an option to set the maximum length of code blocks. Both of these functions and the dependent formatting rely on the .highlight CSS class. You must ensure that you always assign a language to your code blocks if you want to use these functions.</description>
+    </item>
+    
+    <item>
+      <title>Icon Sets</title>
+      <link>http://localhost/features/icon-sets/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost/features/icon-sets/</guid>
+      <description>Custom icon sets Build-in icons     Custom icon sets The only supported source for custom icons are SVG sprites. Some icon frameworks provides ready to use sprites e.g. FontAwesome. If the framework don&amp;rsquo;t provide sprites, you can create your own from raw SVG icons. There are a lot of tools available to create sprites, please choose one that fits your need. One solution could be svgsprit.</description>
+    </item>
+    
+  </channel>
+</rss>

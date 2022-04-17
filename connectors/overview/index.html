@@ -30,7 +30,7 @@
  对于像Kafka这种无schema的存储引擎, 可以用Glink提供的Spatial SQL将空间数据转换为WKT/WKB进行存储. 对于关系型数据库, 尽管MySQL, PostreSQL都支持空间数据存储, 但是直接用Flink JDBC Connector是无法写入空间数据类型的, 因为这些数据库需要严格的类型定义, 而目前在Flink中无法在CREATE TABLE DDL中定义空间数据类型. 当然, 我们可以以WKT/WKB的形式将空间数据存储到关系型数据库中, 遗憾的是这样我们只能简单的存储数据, 无法使用存储引擎的空间索引能力.  不过好在Flink一般在大数据量的场景下使用, 在大数据场景下目前最为流行的时空数据存储引擎是GeoMesa, 底层支持各类分布式存储引擎. 为此Glink通过扩展Flink的Connector框架, 提供了GeoMesa Connector, 它支持完备的空间数据类型和空间关系." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://glink-incubator.github.io/connectors/overview/" />
-
+<meta property="article:modified_time" content="2021-12-28T20:34:32+08:00" />
 
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Overview"/>
@@ -81,7 +81,7 @@
     "copyrightYear" : "0001",
     "dateCreated": "0001-01-01T00:00:00.00Z",
     "datePublished": "0001-01-01T00:00:00.00Z",
-    "dateModified": "0001-01-01T00:00:00.00Z",
+    "dateModified": "2021-12-28T20:34:32.00Z",
     "publisher":{
         "@type":"Organization",
         "name": "Glink",
@@ -1735,7 +1735,10 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
     <div class="container flex">
         <div class="flex flex-wrap">
             <span class="gdoc-footer__item gdoc-footer__item--row">
-                Copyright © 2021-2022 The Glink Team. All Rights Reserved.
+                Copyright © 2021-2022 The Glink Team. All Rights Reserved. Site Visit:
+                <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+                <span class="gdoc-footer__item gdoc-footer__item--row" id="busuanzi_container_site_pv"><span id="busuanzi_value_site_pv"></span>PV</span>
+                <span class="gdoc-footer__item gdoc-footer__item--row" id="busuanzi_container_site_uv"><span id="busuanzi_value_site_uv"></span>UV</span> 
             </span>
             
             
